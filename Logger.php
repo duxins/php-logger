@@ -5,13 +5,13 @@ class Logger{
     const LEVEL_INFO =  3;
     const LEVEL_DEBUG =  4;
 
-    const DEFAULT_LEVEL = 99;
+    const COLOR_RED = 31;
+    const COLOR_GREEN = 32;
+    const COLOR_YELLOW = 33;
+    const COLOR_BLUE = 34;
 
     protected $level;
 
-    /**
-     * @param int $level
-     */
     public function __construct($level = self::LEVEL_DEBUG){
         if(is_string($level)){
             $level = $this->_get_level_num($level);
@@ -20,27 +20,32 @@ class Logger{
         $this->level = $level;
     }
 
-    public function debug($msg){
-        $this->_log('DEBUG', $msg);
+    public function debug($msg, $color = 0){
+        $this->_log('DEBUG', $msg, $color);
     }
 
-    public function info($msg){
-        $this->_log('INFO', $msg);
+    public function info($msg, $color = 0){
+        $this->_log('INFO', $msg, $color);
     }
 
-    public function error($msg){
-        $this->_log('ERROR', $msg);
+    public function error($msg, $color = 0){
+        $this->_log('ERROR', $msg, $color);
     }
 
-    public function warning($msg){
-        $this->_log('WARNING', $msg);
+    public function warning($msg, $color = 0){
+        $this->_log('WARNING', $msg, $color);
     }
 
-    protected function _log($level_string, $msg){
+    protected function _log($level_string, $msg, $color = 0){
         $level = $this->_get_level_num($level_string);
         if($level > $this->level){
             return;
         }
+
+        if($color){
+            $msg = "\033[0;${color}m".$msg."\033[0m";
+        }
+
         $time = date('Y-m-d H:i:s');
         echo "[$time] $level_string $msg \n";
     }
