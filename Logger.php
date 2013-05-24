@@ -11,11 +11,14 @@ class Logger{
     const COLOR_BLUE = 34;
 
     protected $level;
+    protected $file;
 
-    public function __construct($level = self::LEVEL_DEBUG){
+    public function __construct($level = self::LEVEL_DEBUG, $file = ''){
         if(is_string($level)){
             $level = $this->_get_level_num($level);
         }
+
+        $this->file = $file?$file:'';
 
         $this->level = $level;
     }
@@ -47,7 +50,14 @@ class Logger{
         }
 
         $time = date('Y-m-d H:i:s');
-        echo "[$time] $level_string $msg \n";
+
+        $msg =  "[$time] $level_string $msg \n";
+
+        if($this->file){
+            @file_put_contents($this->file, $msg, FILE_APPEND);
+        }else{
+            echo $msg;
+        }
     }
 
     protected function _get_level_num($level){
